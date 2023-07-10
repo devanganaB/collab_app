@@ -10,58 +10,60 @@ class LoginPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(45.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const FlutterLogo(
-              size: 120,
-            ),
-            const SizedBox(height: 35),
-
-            //email
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const FlutterLogo(
+                size: 120,
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 35),
 
-            //password
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Password',
+              //email
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                ),
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 32),
+              const SizedBox(height: 16),
 
-            //button
-
-            ElevatedButton(
-              onPressed: () {
-                print('Logged in');
-              },
-              child: const Text('Login'),
-            ),
-
-            const SizedBox(height: 32),
-
-            //registration gateway
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegistrationPage()),
-                );
-              },
-              child: const Text(
-                "Don't have an account? Register here.",
-                style: TextStyle(fontWeight: FontWeight.bold),
+              //password
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                ),
+                obscureText: true,
               ),
-            ),
+              const SizedBox(height: 32),
 
-            //will openin new page
-          ],
+              //button
+
+              ElevatedButton(
+                onPressed: () {
+                  print('Logged in');
+                },
+                child: const Text('Login'),
+              ),
+
+              const SizedBox(height: 32),
+
+              //registration gateway
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                  );
+                },
+                child: const Text(
+                  "Don't have an account? Register here.",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              //will open in new page
+            ],
+          ),
         ),
       ),
     );

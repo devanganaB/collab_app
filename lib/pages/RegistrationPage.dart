@@ -18,52 +18,68 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(45.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //name
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //name
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
-            //email
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
+              //email
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
-            //password
-            TextFormField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
+              //contact
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Contact no.',
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                String name = _nameController.text;
-                String email = _emailController.text;
-                String password = _passwordController.text;
+              const SizedBox(height: 16.0),
 
-                //eg: can print the data to the console
-                print('Name: $name');
-                print('Email: $email');
-                print('Password: $password');
-              },
+              //github profile
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'GitHub Profile',
+                ),
+              ),
+              const SizedBox(height: 16.0),
 
-              //register button
-              child: const Text('Register'),
-            ),
-          ],
+              //password
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              SizedBox(
+                width: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    print('registered');
+                  },
+
+                  //register button
+                  child: const Text('Register'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
