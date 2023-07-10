@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "749469333125",
+    "project_id": "collabapp-8093b",
+    "storage_bucket": "collabapp-8093b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749469333125:android:1e2c4dcb783dd5694a9bec",
+        "android_client_info": {
+          "package_name": "com.example.softhack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749469333125-v3ejqd8ajco3509gec2mbh1ddeg53u4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA67alW8OwxYQmZ6JmQ2lHXdMV60jMhL1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749469333125-v3ejqd8ajco3509gec2mbh1ddeg53u4o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
