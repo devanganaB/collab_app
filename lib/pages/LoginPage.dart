@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'student.dart';
 import 'teacher.dart';
+import 'RegistrationPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,14 +22,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(45.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlutterLogo(
+            const FlutterLogo(
               size: 120,
             ),
             SizedBox(height: 32),
@@ -46,13 +47,35 @@ class _LoginPageState extends State<LoginPage> {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
+
+            //button
+
             ElevatedButton(
               onPressed: () {
                 signIn(emailController.text, passwordController.text);
+                print('Logged in');
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
+
+            const SizedBox(height: 32),
+
+            //registration gateway
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegistrationPage()),
+                );
+              },
+              child: const Text(
+                "Don't have an account? Register here.",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            //will openin new page
           ],
         ),
       ),
