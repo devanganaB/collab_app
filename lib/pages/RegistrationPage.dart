@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'LoginPage.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -42,124 +43,137 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: Padding(
         padding: const EdgeInsets.all(45.0),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              //Role
-              Container(
-                width: double.infinity,
-                child: DropdownButtonFormField<String>(
-                  value: _selectedClass,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedClass = value!;
-                    });
-                  },
-                  items: _classOptions
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Role'),
-                ),
-              ),
-
-              SizedBox(height: 25),
-
-              //name
-              TextField(
-                controller: name,
-                onChanged: (value) {
-                  setState(() {
-                    _name = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Name'),
-              ),
-
-              SizedBox(height: 25),
-
-              //email
-              TextField(
-                controller: emailController,
-                onChanged: (value) {
-                  setState(() {
-                    _email = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-
-              SizedBox(height: 25),
-
-              //contact
-              TextField(
-                controller: contactController,
-                onChanged: (value) {
-                  setState(() {
-                    _contactNumber = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Contact Number'),
-                keyboardType: TextInputType.phone,
-              ),
-
-              SizedBox(height: 25),
-
-              //github
-              TextField(
-                controller: githubProfileController,
-                onChanged: (value) {
-                  setState(() {
-                    _githubProfile = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'GitHub Profile'),
-              ),
-
-              SizedBox(height: 25),
-
-              //password
-              TextField(
-                controller: passwordController,
-                onChanged: (value) {
-                  setState(() {
-                    _password = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  suffixIcon: IconButton(
-                    icon: Icon(_showPassword
-                        ? Icons.visibility
-                        : Icons.visibility_off),
-                    onPressed: () {
+          child: Form(
+            key: _formkey,
+            child: Column(
+              children: [
+                //Role
+                Container(
+                  width: double.infinity,
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedClass,
+                    onChanged: (value) {
                       setState(() {
-                        _showPassword = !_showPassword;
+                        _selectedClass = value!;
                       });
                     },
+                    items: _classOptions
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    decoration: InputDecoration(labelText: 'Role'),
                   ),
                 ),
-                obscureText: !_showPassword,
-              ),
 
-              SizedBox(height: 35),
+                SizedBox(height: 25),
 
-              //Button
-
-              Container(
-                child: ElevatedButton(
-                  onPressed: () {
-                    print('registered');
-                    signUp(emailController.text, passwordController.text,
-                        _selectedClass!);
+                //name
+                TextField(
+                  controller: name,
+                  onChanged: (value) {
+                    setState(() {
+                      _name = value;
+                    });
                   },
-                  child: const Text('Register'),
+                  decoration: InputDecoration(labelText: 'Name'),
                 ),
-              ),
-            ],
+
+                SizedBox(height: 25),
+
+                //email
+                TextField(
+                  controller: emailController,
+                  onChanged: (value) {
+                    setState(() {
+                      _email = value;
+                    });
+                  },
+                  decoration: InputDecoration(labelText: 'Email'),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+
+                SizedBox(height: 25),
+
+                //contact
+                TextFormField(
+                  controller: contactController,
+                  onChanged: (value) {
+                    setState(() {
+                      _contactNumber = value;
+                    });
+                  },
+                  decoration: InputDecoration(labelText: 'Contact Number'),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly, // Only allow digits
+                  ],
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your contact number';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                SizedBox(height: 25),
+
+                //github
+                TextField(
+                  controller: githubProfileController,
+                  onChanged: (value) {
+                    setState(() {
+                      _githubProfile = value;
+                    });
+                  },
+                  decoration: InputDecoration(labelText: 'GitHub Profile'),
+                ),
+
+                SizedBox(height: 25),
+
+                //password
+                TextField(
+                  controller: passwordController,
+                  onChanged: (value) {
+                    setState(() {
+                      _password = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(_showPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _showPassword = !_showPassword;
+                        });
+                      },
+                    ),
+                  ),
+                  obscureText: !_showPassword,
+                ),
+
+                SizedBox(height: 35),
+
+                //Button
+
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print('registered');
+                      signUp(emailController.text, passwordController.text,
+                          _selectedClass!);
+                    },
+                    child: const Text('Register'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -183,7 +197,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
       var user = _auth.currentUser;
       CollectionReference ref = FirebaseFirestore.instance.collection('users');
-      ref.doc(user!.uid).set({'email': emailController.text, 'role': role});
+      await ref.doc(user!.uid).set({
+        'name': _name,
+        'email': email,
+        'role': role,
+        'contactNumber': _contactNumber,
+        'githubProfile': _githubProfile,
+      });
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
     }
