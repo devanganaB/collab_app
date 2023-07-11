@@ -29,64 +29,68 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: const EdgeInsets.all(45.0),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Welcome back you've been missed"),
-              const SizedBox(height: 32),
+          child: Form(
+            key: _formkey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Welcome back you've been missed"),
+                const SizedBox(height: 32),
 
-              //LOGO
-              const FlutterLogo(
-                size: 120,
-              ),
-              const SizedBox(height: 32),
-
-              //EMAIL
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
+                //LOGO
+                const FlutterLogo(
+                  size: 120,
                 ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 32),
 
-              //PASSWRD
-              TextField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
+                //EMAIL
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                  ),
                 ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 32),
+                const SizedBox(height: 16),
 
-              //button
-
-              ElevatedButton(
-                onPressed: () {
-                  print('Logged in');
-                },
-                child: const Text('Login'),
-              ),
-
-              const SizedBox(height: 32),
-
-              //registration gateway
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()),
-                  );
-                },
-                child: const Text(
-                  "Don't have an account? Register here.",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                //PASSWRD
+                TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                  ),
+                  obscureText: true,
                 ),
-              ),
+                const SizedBox(height: 32),
 
-              //will open in new page
-            ],
+                //button
+
+                ElevatedButton(
+                  onPressed: () {
+                    signIn(emailController.text, passwordController.text);
+                  },
+                  child: const Text('Login'),
+                ),
+
+                const SizedBox(height: 32),
+
+                //registration gateway
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegistrationPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Don't have an account? Register here.",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                //will open in new page
+              ],
+            ),
           ),
         ),
       ),
@@ -101,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        if (documentSnapshot.get('rool') == "Teacher") {
+        if (documentSnapshot.get('role') == "Mentor") {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
