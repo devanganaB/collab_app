@@ -6,82 +6,135 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  String _name = '';
+  String _contactNumber = '';
+  String _email = '';
+  String _githubProfile = '';
+  String _password = '';
+  String? _selectedClass;
+  bool _showPassword = false;
+
+  List<String> _classOptions = ['Student', 'Mentor'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 238, 238, 238),
       appBar: AppBar(
         title: const Text('Registration'),
+        backgroundColor: Colors.grey[350],
       ),
       body: Padding(
         padding: const EdgeInsets.all(45.0),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              //name
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
+              //Role
+              Container(
+                width: double.infinity,
+                child: DropdownButtonFormField<String>(
+                  value: _selectedClass,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedClass = value;
+                    });
+                  },
+                  items: _classOptions
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: InputDecoration(labelText: 'Role'),
                 ),
               ),
-              const SizedBox(height: 16.0),
+
+              SizedBox(height: 25),
+
+              //name
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _name = value;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+
+              SizedBox(height: 25),
 
               //email
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _email = value;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 16.0),
+
+              SizedBox(height: 25),
 
               //contact
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Contact no.',
-                ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _contactNumber = value;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'Contact Number'),
+                keyboardType: TextInputType.phone,
               ),
-              const SizedBox(height: 16.0),
 
-              //github profile
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'GitHub Profile',
-                ),
+              SizedBox(height: 25),
+
+              //github
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _githubProfile = value;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'GitHub Profile'),
               ),
-              const SizedBox(height: 16.0),
+
+              SizedBox(height: 25),
 
               //password
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()),
-                  );
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _password = value;
+                  });
                 },
-                child: Container(
-                  width: 80.0, // Adjust the width as per your requirement
-                  child: ElevatedButton(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  suffixIcon: IconButton(
+                    icon: Icon(_showPassword
+                        ? Icons.visibility
+                        : Icons.visibility_off),
                     onPressed: () {
-                      print('registered');
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
                     },
-                    child: const Text('Register'),
                   ),
+                ),
+                obscureText: !_showPassword,
+              ),
+
+              SizedBox(height: 35),
+
+              //Button
+
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {
+                    print('registered');
+                  },
+                  child: const Text('Register'),
                 ),
               ),
             ],
