@@ -1,10 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:softhack/pages/RegistrationPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'student.dart';
+import 'teacher.dart';
+import 'RegistrationPage.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _isObscure3 = true;
+  bool visible = false;
+  final _formkey = GlobalKey<FormState>();
+  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
+
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: const Text('Login'),
       ),
@@ -14,22 +31,28 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text("Welcome back you've been missed"),
+              const SizedBox(height: 32),
+
+              //LOGO
               const FlutterLogo(
                 size: 120,
               ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 32),
 
-              //email
-              const TextField(
-                decoration: InputDecoration(
+              //EMAIL
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
               ),
               const SizedBox(height: 16),
 
-              //password
-              const TextField(
-                decoration: InputDecoration(
+              //PASSWRD
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(
                   labelText: 'Password',
                 ),
                 obscureText: true,
@@ -67,5 +90,53 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void route() {
+    User? user = FirebaseAuth.instance.currentUser;
+    var kk = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.get('rool') == "Teacher") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Teacher(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Student(),
+            ),
+          );
+        }
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+  }
+
+  void signIn(String email, String password) async {
+    if (_formkey.currentState!.validate()) {
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        route();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }
+    }
   }
 }

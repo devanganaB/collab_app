@@ -67,15 +67,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              SizedBox(
-                width: 60,
-                child: ElevatedButton(
-                  onPressed: () {
-                    print('registered');
-                  },
-
-                  //register button
-                  child: const Text('Register'),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                  );
+                },
+                child: Container(
+                  width: 80.0, // Adjust the width as per your requirement
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print('registered');
+                    },
+                    child: const Text('Register'),
+                  ),
                 ),
               ),
             ],
