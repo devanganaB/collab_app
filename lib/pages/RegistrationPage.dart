@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'LoginPage.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -6,6 +9,18 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  _RegistrationPageState();
+
+  final _formkey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+
+  final TextEditingController name = new TextEditingController();
+  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController contactController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
+  final TextEditingController githubProfileController =
+      new TextEditingController();
+
   String _name = '';
   String _contactNumber = '';
   String _email = '';
@@ -36,7 +51,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   value: _selectedClass,
                   onChanged: (value) {
                     setState(() {
-                      _selectedClass = value;
+                      _selectedClass = value!;
                     });
                   },
                   items: _classOptions
@@ -54,6 +69,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               //name
               TextField(
+                controller: name,
                 onChanged: (value) {
                   setState(() {
                     _name = value;
@@ -66,6 +82,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               //email
               TextField(
+                controller: emailController,
                 onChanged: (value) {
                   setState(() {
                     _email = value;
@@ -79,6 +96,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               //contact
               TextField(
+                controller: contactController,
                 onChanged: (value) {
                   setState(() {
                     _contactNumber = value;
@@ -92,6 +110,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               //github
               TextField(
+                controller: githubProfileController,
                 onChanged: (value) {
                   setState(() {
                     _githubProfile = value;
@@ -104,6 +123,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               //password
               TextField(
+                controller: passwordController,
                 onChanged: (value) {
                   setState(() {
                     _password = value;
@@ -133,6 +153,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     print('registered');
+                    signUp(emailController.text, passwordController.text,
+                        _selectedClass!);
                   },
                   child: const Text('Register'),
                 ),
@@ -142,5 +164,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
       ),
     );
+  }
+
+  void signUp(String email, String password, String role) async {
+    CircularProgressIndicator();
+    if (_formkey.currentState != null && _formkey.currentState!.validate()) {
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) => {postDetailsToFirestore(email, role)})
+          .catchError((e) {
+        print(e);
+      });
+    }
+  }
+
+  postDetailsToFirestore(String email, String role) async {
+    if (_auth.currentUser != null) {
+      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      var user = _auth.currentUser;
+      CollectionReference ref = FirebaseFirestore.instance.collection('users');
+      ref.doc(user!.uid).set({'email': emailController.text, 'role': role});
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 }
