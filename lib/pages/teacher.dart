@@ -72,11 +72,13 @@ class _TeacherState extends State<Teacher> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () {
-                // Action for home button
-              },
+            Center(
+              child: IconButton(
+                icon: Icon(Icons.home),
+                onPressed: () {
+                  // Action for home button
+                },
+              ),
             ),
             IconButton(
               icon: Icon(Icons.chat),
@@ -86,6 +88,12 @@ class _TeacherState extends State<Teacher> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("POST ADD");
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
