@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'CreatePostPage.dart';
 import 'LoginPage.dart';
+import 'package:softhack/widgets/cards.dart';
 
 class Teacher extends StatefulWidget {
   @override
@@ -57,12 +58,13 @@ class _TeacherState extends State<Teacher> {
         child: Column(
           children: [
             // Posts in card views
-            Card(
-              child: ListTile(
-                title: Text('Post Title 1'),
-                subtitle: Text('Post Description 1'),
-              ),
-            ),
+            // Card(
+            //   child: ListTile(
+            //     title: Text('Post Title 1'),
+            //     subtitle: Text('Post Description 1'),
+            //   ),
+            // ),
+            Project(),
 
             // Add more card views for additional posts
           ],
@@ -91,6 +93,10 @@ class _TeacherState extends State<Teacher> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddProjectPage()),
+          );
           print("POST ADD");
         },
         child: Icon(Icons.add),
