@@ -36,6 +36,7 @@ class _AddProjectPageState extends State<AddProjectPage> {
         'description': _descriptionController.text,
         'domain': _domainController.text,
         'skills': _skillsController.text,
+        'userDocId': user!.uid,
       });
 
       // Clear the form
