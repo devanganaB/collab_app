@@ -73,11 +73,37 @@ class _TeacherState extends State<Teacher> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var project = snapshot.data!.docs[index];
-              return Card(
-                child: ListTile(
-                  title: Text(project['title']),
-                  subtitle: Text(project['description']),
-                  // Add more fields from the document as needed
+              return Container(
+                height: 150,
+                padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+                child: Card(
+                  semanticContainer: true,
+                  color: Colors.blue, // Set the desired color for the card
+                  elevation: 2, // Set the desired elevation for the card
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        10), // Set the desired border radius for the card
+                  ),
+                  // Set the desired padding for the card content
+
+                  child: ListTile(
+                    title: Text(
+                      project['title'],
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+
+                    subtitle: Text(
+                      project['description'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    // Add more fields from the document as needed
+                    onTap: () {
+                      _showProjectDetailsDialog(context, project);
+                    },
+                  ),
                 ),
               );
             },
@@ -126,6 +152,46 @@ class _TeacherState extends State<Teacher> {
       MaterialPageRoute(
         builder: (context) => LoginPage(),
       ),
+    );
+  }
+
+  void _showProjectDetailsDialog(
+      BuildContext context, DocumentSnapshot project) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 150,
+          child: AlertDialog(
+            backgroundColor: Color.fromARGB(255, 218, 232, 238),
+            title: Text(project['title']),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Description:${project['description']} ',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Text('Skills: ${project['skills']}',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Text('Domain: ${project['domain']}',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                // Add more fields from the document as needed
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
