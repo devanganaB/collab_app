@@ -9,6 +9,12 @@ class Teacher extends StatefulWidget {
 }
 
 class _TeacherState extends State<Teacher> {
+  final List<Post> posts = [
+    Post('Post Title 1', 'Post Description 1'),
+    Post('Post Title 2', 'Post Description 2'),
+    Post('Post Title 3', 'Post Description 3'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +78,11 @@ class _TeacherState extends State<Teacher> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Center(
-              child: IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  // Action for home button
-                },
-              ),
+            IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
+                // Action for home button
+              },
             ),
             IconButton(
               icon: Icon(Icons.chat),
@@ -107,5 +111,71 @@ class _TeacherState extends State<Teacher> {
         builder: (context) => LoginPage(),
       ),
     );
+  }
+}
+
+class Post {
+  final String title;
+  final String description;
+
+  Post(this.title, this.description);
+}
+
+class CreatePostPage extends StatefulWidget {
+  @override
+  _CreatePostPageState createState() => _CreatePostPageState();
+}
+
+class _CreatePostPageState extends State<CreatePostPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Create Post'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Title',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                _savePost(context);
+              },
+              child: Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _savePost(BuildContext context) {
+    String title = _titleController.text;
+    String description = _descriptionController.text;
+
+    if (title.isNotEmpty && description.isNotEmpty) {
+      Navigator.pop(
+        context,
+        Post(title, description),
+      );
+    }
   }
 }
