@@ -1,14 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'LoginPage.dart';
-
-class Teacher extends StatefulWidget {
-  @override
-  State<Teacher> createState() => _TeacherState();
-}
-
-class _TeacherState extends State<Teacher> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +55,18 @@ class _TeacherState extends State<Teacher> {
                 subtitle: Text('Post Description 1'),
               ),
             ),
-
+            Card(
+              child: ListTile(
+                title: Text('Post Title 2'),
+                subtitle: Text('Post Description 2'),
+              ),
+            ),
+            Card(
+              child: ListTile(
+                title: Text('Post Title 3'),
+                subtitle: Text('Post Description 3'),
+              ),
+            ),
             // Add more card views for additional posts
           ],
         ),
@@ -86,17 +89,6 @@ class _TeacherState extends State<Teacher> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Future<void> logout(BuildContext context) async {
-    CircularProgressIndicator();
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginPage(),
       ),
     );
   }

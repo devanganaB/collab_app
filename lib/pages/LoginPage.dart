@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 ElevatedButton(
                   onPressed: () {
+                    print('Logged in');
                     signIn(emailController.text, passwordController.text);
                   },
                   child: const Text('Login'),
@@ -109,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const Teacher(),
+              builder: (context) => Teacher(),
             ),
           );
         } else {
