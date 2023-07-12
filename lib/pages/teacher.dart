@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'CreatePostPage.dart';
 import 'LoginPage.dart';
 import 'package:softhack/widgets/cards.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Teacher extends StatefulWidget {
   @override
@@ -10,6 +12,8 @@ class Teacher extends StatefulWidget {
 }
 
 class _TeacherState extends State<Teacher> {
+  CollectionReference _projectsCollection =
+      FirebaseFirestore.instance.collection('projects');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,21 +58,31 @@ class _TeacherState extends State<Teacher> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Posts in card views
-            // Card(
-            //   child: ListTile(
-            //     title: Text('Post Title 1'),
-            //     subtitle: Text('Post Description 1'),
-            //   ),
-            // ),
-            Project(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _projectsCollection.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
 
-            // Add more card views for additional posts
-          ],
-        ),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var project = snapshot.data!.docs[index];
+              return Card(
+                child: ListTile(
+                  title: Text(project['title']),
+                  subtitle: Text(project['description']),
+                  // Add more fields from the document as needed
+                ),
+              );
+            },
+          );
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
