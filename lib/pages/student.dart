@@ -18,12 +18,13 @@ class _StudentState extends State<Student> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[300],
         title: Text('Home'),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.logout), //LOGOUT
             onPressed: () {
-              // Action for profile button
+              logout(context);
             },
           ),
         ],
@@ -73,24 +74,29 @@ class _StudentState extends State<Student> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var project = snapshot.data!.docs[index];
-
-              // return GestureDetector(
               return Container(
                 height: 150,
                 padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
                 child: Card(
                   semanticContainer: true,
-                  color: Colors.blue, // Set the desired color for the card
-                  elevation: 2, // Set the desired elevation for the card
+                  color: Colors.blue,
+                  elevation: 2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        10), // Set the desired border radius for the card
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  // Set the desired padding for the card content
-
                   child: ListTile(
-                    title: Text(project['title']),
-                    subtitle: Text(project['description']),
+                    title: Text(
+                      project['title'],
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+
+                    subtitle: Text(
+                      project['description'],
+                      style: TextStyle(color: Colors.white),
+                    ),
                     // Add more fields from the document as needed
                     onTap: () {
                       _showProjectDetailsDialog(context, project);
@@ -98,37 +104,6 @@ class _StudentState extends State<Student> {
                   ),
                 ),
               );
-
-              // onTap: () {
-              //   showDialog(
-              //     context: context,
-              //     builder: (BuildContext context) {
-              //       return AlertDialog(
-              //         title: Text(project['title']),
-              //         content: Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           mainAxisSize: MainAxisSize.min,
-              //           children: [
-              //             Text('Domain: ${project['domain']}'),
-              //             Text('Description: ${project['description']}'),
-              //             Text('Skills: ${project['skills']}'),
-              //           ],
-              //         ),
-              //         actions: [
-              //           TextButton(
-              //             onPressed: () {
-              //               Navigator.of(context).pop();
-              //             },
-              //             child: Text('Close'),
-              //           ),
-              //         ],
-              //       );
-              //     },
-              //   );
-              // },
-
-              // end of display
-              // );
             },
           );
         },
@@ -137,18 +112,22 @@ class _StudentState extends State<Student> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Center(
-              child: IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  // Action for home button
-                },
-              ),
-            ),
             IconButton(
               icon: Icon(Icons.chat),
               onPressed: () {
                 // Action for chat button
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.home, size: 30),
+              onPressed: () {
+                // Action for home button
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.account_circle, size: 30),
+              onPressed: () {
+                // Action for account
               },
             ),
           ],
@@ -173,26 +152,35 @@ class _StudentState extends State<Student> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(project['title']),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Description: '),
-              // Text('Skills: ${project['skills']}'),
-              // Text('Domain: ${project['domain']}'),
-              // Add more fields from the document as needed
+        return Container(
+          height: 150,
+          child: AlertDialog(
+            backgroundColor: Color.fromARGB(255, 218, 232, 238),
+            title: Text(project['title']),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Description:${project['description']} ',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Text('Skills: ${project['skills']}',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Text('Domain: ${project['domain']}',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
         );
       },
     );

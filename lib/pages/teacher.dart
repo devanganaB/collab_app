@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'ChatPage.dart';
 import 'CreatePostPage.dart';
 import 'LoginPage.dart';
 import 'package:softhack/widgets/cards.dart';
@@ -18,12 +19,13 @@ class _TeacherState extends State<Teacher> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[300],
         title: Text('Home'),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.logout), //LOGOUT
             onPressed: () {
-              // Action for profile button
+              logout(context);
             },
           ),
         ],
@@ -114,18 +116,25 @@ class _TeacherState extends State<Teacher> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Center(
-              child: IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  // Action for home button
-                },
-              ),
-            ),
             IconButton(
               icon: Icon(Icons.chat),
               onPressed: () {
-                // Action for chat button
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatPage()),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.home, size: 30),
+              onPressed: () {
+                // Action for home button
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.account_circle, size: 30),
+              onPressed: () {
+                // Action for account
               },
             ),
           ],
@@ -178,7 +187,6 @@ class _TeacherState extends State<Teacher> {
                 Text('Domain: ${project['domain']}',
                     style: TextStyle(fontSize: 16)),
                 SizedBox(height: 15),
-                // Add more fields from the document as needed
               ],
             ),
             actions: [

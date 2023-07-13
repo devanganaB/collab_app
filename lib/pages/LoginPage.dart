@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'student.dart';
 import 'teacher.dart';
 import 'RegistrationPage.dart';
+import 'ChatPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
