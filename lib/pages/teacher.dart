@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'ChatPage.dart';
@@ -6,6 +7,8 @@ import 'LoginPage.dart';
 import 'package:softhack/widgets/cards.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:softhack/widgets/mentorname.dart';
+import 'package:dotted_line/dotted_line.dart';
 
 class Teacher extends StatefulWidget {
   @override
@@ -15,6 +18,9 @@ class Teacher extends StatefulWidget {
 class _TeacherState extends State<Teacher> {
   CollectionReference _projectsCollection =
       FirebaseFirestore.instance.collection('projects');
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,13 +81,14 @@ class _TeacherState extends State<Teacher> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var project = snapshot.data!.docs[index];
+
               return Container(
-                height: 150,
+                height: 200,
                 padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
                 child: Card(
                   semanticContainer: true,
                   color: Colors.blue, // Set the desired color for the card
-                  elevation: 2, // Set the desired elevation for the card
+                  elevation: 4, // Set the desired elevation for the card
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         10), // Set the desired border radius for the card
@@ -97,11 +104,43 @@ class _TeacherState extends State<Teacher> {
                           color: Colors.white),
                     ),
 
-                    subtitle: Text(
-                      _truncateSubtitle(project['description'],
-                          10), // Set the desired word limit
-                      style: TextStyle(color: Colors.white),
+                    subtitle: FutureBuilder<dynamic>(
+                      future: getData(context, project),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          String data = snapshot.data.toString();
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _truncateSubtitle(project['description'],
+                                    10), // Set the desired word limit
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(height: 30),
+                              // Spacer(flex: 2),
+
+                              DottedLine(
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: Colors.grey,
+                              ),
+
+                              Text(
+                                data,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          );
+                        }
+                      },
                     ),
+
                     // Add more fields from the document as needed
                     onTap: () {
                       _showProjectDetailsDialog(context, project);
@@ -191,11 +230,21 @@ class _TeacherState extends State<Teacher> {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Close'),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Apply'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Close'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -213,5 +262,14 @@ class _TeacherState extends State<Teacher> {
       List<String> truncatedWords = words.sublist(0, wordLimit);
       return '${truncatedWords.join(' ')}...';
     }
+  }
+
+  getData(BuildContext context, DocumentSnapshot project) async {
+    String userId = project['userDocId'];
+    DocumentSnapshot userSnapshot = await _userCollection.doc(userId).get();
+    print(userSnapshot['name']);
+
+    String name = userSnapshot['name'];
+    return name;
   }
 }
