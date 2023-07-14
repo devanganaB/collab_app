@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'student.dart';
 import 'teacher.dart';
 import 'RegistrationPage.dart';
+import 'ChatPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -117,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const Student(),
+              builder: (context) => Student(),
             ),
           );
         }
