@@ -98,7 +98,8 @@ class _TeacherState extends State<Teacher> {
                     ),
 
                     subtitle: Text(
-                      project['description'],
+                      _truncateSubtitle(project['description'],
+                          10), // Set the desired word limit
                       style: TextStyle(color: Colors.white),
                     ),
                     // Add more fields from the document as needed
@@ -201,5 +202,16 @@ class _TeacherState extends State<Teacher> {
         );
       },
     );
+  }
+
+  //WORD LIMIT
+  String _truncateSubtitle(String subtitle, int wordLimit) {
+    List<String> words = subtitle.split(' ');
+    if (words.length <= wordLimit) {
+      return subtitle;
+    } else {
+      List<String> truncatedWords = words.sublist(0, wordLimit);
+      return '${truncatedWords.join(' ')}...';
+    }
   }
 }

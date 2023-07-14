@@ -94,7 +94,8 @@ class _StudentState extends State<Student> {
                     ),
 
                     subtitle: Text(
-                      project['description'],
+                      _truncateSubtitle(project['description'],
+                          10), // Set the desired word limit
                       style: TextStyle(color: Colors.white),
                     ),
                     // Add more fields from the document as needed
@@ -173,6 +174,19 @@ class _StudentState extends State<Student> {
               ],
             ),
             actions: [
+              ElevatedButton(
+                onPressed: () {
+                  print("pressed");
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blueAccent),
+                ),
+                child: Text(
+                  "Apply",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -184,5 +198,16 @@ class _StudentState extends State<Student> {
         );
       },
     );
+  }
+
+  //WORD LIMIT
+  String _truncateSubtitle(String subtitle, int wordLimit) {
+    List<String> words = subtitle.split(' ');
+    if (words.length <= wordLimit) {
+      return subtitle;
+    } else {
+      List<String> truncatedWords = words.sublist(0, wordLimit);
+      return '${truncatedWords.join(' ')}...';
+    }
   }
 }
