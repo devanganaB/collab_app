@@ -204,13 +204,21 @@ class _ChatPageState extends State<ChatPage> {
     return name;
   }
 
+  acceptStudent(
+      BuildContext context, DocumentSnapshot project, String studentId) async {
+    String projectId = project.id;
+    DocumentSnapshot userSnapshot = await _userCollection.doc(studentId).get();
+    List<dynamic> array = userSnapshot['acceptedProjects'];
+
+    array.add(projectId);
+    userSnapshot.reference.update({'acceptedProjects': array});
+  }
+
   void _showProjectDetailsDialog(
       BuildContext context, DocumentSnapshot project) async {
     List<dynamic> appliedUserIds = project.get('applied') as List<dynamic>;
-    List<String> studentNames = await fetchStudentNames(appliedUserIds);
 
-    bool isAccepting = false;
-    List<String> selectedStudents = [];
+    List<String> studentNames = await fetchStudentNames(appliedUserIds);
 
     showDialog(
       context: context,
@@ -247,7 +255,7 @@ class _ChatPageState extends State<ChatPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: studentNames.map((name) {
-                          bool isSelected = selectedStudents.contains(name);
+                          int ind = studentNames.indexOf(name);
                           return Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Container(
@@ -256,28 +264,18 @@ class _ChatPageState extends State<ChatPage> {
                                     color: const Color.fromARGB(
                                         255, 218, 231, 238),
                                     borderRadius: BorderRadius.circular(8)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(name,
-                                          style: TextStyle(fontSize: 18)),
-                                      Checkbox(
-                                        value: isSelected,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            if (value != null && value) {
-                                              selectedStudents.add(name);
-                                              // isSelected = true;
-                                            } else {
-                                              selectedStudents.remove(name);
-                                              // isSelected = false;
-                                            }
-                                          });
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(name, style: TextStyle(fontSize: 18)),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          acceptStudent(context, project,
+                                              appliedUserIds[ind]);
                                         },
-                                      ),
-                                    ],
-                                  ),
+                                        child: Text("accept"))
+                                  ],
                                 )),
                           );
                         }).toList(),

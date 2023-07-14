@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:softhack/pages/SideMenu.dart';
+import 'package:softhack/pages/teacher.dart';
 import 'ChatPage.dart';
 import 'CreatePostPage.dart';
 import 'LoginPage.dart';
@@ -10,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:softhack/widgets/mentorname.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'ChatPageStudent.dart';
 
 class Student extends StatefulWidget {
   @override
@@ -57,7 +59,7 @@ class _StudentState extends State<Student> {
 
               return Container(
                 height: 200,
-                padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                 child: Card(
                   semanticContainer: true,
                   color: Colors.blue, // Set the desired color for the card
@@ -133,7 +135,7 @@ class _StudentState extends State<Student> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChatPage()),
+                  MaterialPageRoute(builder: (context) => ChatPageStudent()),
                 );
               },
             ),

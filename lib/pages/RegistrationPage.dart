@@ -21,6 +21,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController passwordController = new TextEditingController();
   final TextEditingController githubProfileController =
       new TextEditingController();
+  List<String> acceptedProjects = [];
 
   String _name = '';
   String _contactNumber = '';
@@ -203,6 +204,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'role': role,
         'contactNumber': _contactNumber,
         'githubProfile': _githubProfile,
+        'acceptedProjects': acceptedProjects
       });
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
