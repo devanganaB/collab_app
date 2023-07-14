@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:softhack/pages/SideMenu.dart';
 import 'ChatPage.dart';
 import 'CreatePostPage.dart';
 import 'LoginPage.dart';
@@ -36,36 +37,7 @@ class _TeacherState extends State<Teacher> {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Drawer Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Menu Item 1'),
-              onTap: () {
-                // Action for menu item 1
-              },
-            ),
-            ListTile(
-              title: Text('Menu Item 2'),
-              onTap: () {
-                // Action for menu item 2
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: SideMenu(),
       body: StreamBuilder<QuerySnapshot>(
         stream: _projectsCollection.snapshots(),
         builder: (context, snapshot) {

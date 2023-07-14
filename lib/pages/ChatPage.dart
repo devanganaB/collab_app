@@ -37,6 +37,7 @@ class _ChatPageState extends State<ChatPage> {
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
 
+  Map<String, bool> studentAcceptance = {};
   List<String> studentNames = [];
 
   // @override
@@ -207,6 +208,10 @@ class _ChatPageState extends State<ChatPage> {
       BuildContext context, DocumentSnapshot project) async {
     List<dynamic> appliedUserIds = project.get('applied') as List<dynamic>;
     List<String> studentNames = await fetchStudentNames(appliedUserIds);
+
+    bool isAccepting = false;
+    List<String> selectedStudents = [];
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -242,6 +247,7 @@ class _ChatPageState extends State<ChatPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: studentNames.map((name) {
+                          bool isSelected = selectedStudents.contains(name);
                           return Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Container(
@@ -250,8 +256,29 @@ class _ChatPageState extends State<ChatPage> {
                                     color: const Color.fromARGB(
                                         255, 218, 231, 238),
                                     borderRadius: BorderRadius.circular(8)),
-                                child:
-                                    Text(name, style: TextStyle(fontSize: 18))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(name,
+                                          style: TextStyle(fontSize: 18)),
+                                      Checkbox(
+                                        value: isSelected,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            if (value != null && value) {
+                                              selectedStudents.add(name);
+                                              // isSelected = true;
+                                            } else {
+                                              selectedStudents.remove(name);
+                                              // isSelected = false;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                )),
                           );
                         }).toList(),
                       ),
@@ -268,6 +295,14 @@ class _ChatPageState extends State<ChatPage> {
                       Navigator.of(context).pop();
                     },
                     child: Text('Close'),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {},
+                    // onPressed: isAccepting
+                    //     ? null
+                    //     : () => acceptStudents(selectedStudents),
+                    child: Text('Accept'),
                   ),
                 ],
               ),
