@@ -20,6 +20,15 @@ class _ChatPageState extends State<ChatPage> {
       FirebaseFirestore.instance.collection('projects');
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
+
+  final List<String> students = [
+    'Student 1',
+    'Student 2',
+    'Student 3',
+    'Student 4',
+    'Student 5',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,14 +68,11 @@ class _ChatPageState extends State<ChatPage> {
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: Card(
                     semanticContainer: true,
-                    color: Colors.blue, // Set the desired color for the card
-                    elevation: 4, // Set the desired elevation for the card
+                    color: Colors.blue,
+                    elevation: 4,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          10), // Set the desired border radius for the card
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    // Set the desired padding for the card content
-
                     child: ListTile(
                       title: Text(
                         project['title'],
@@ -95,14 +101,11 @@ class _ChatPageState extends State<ChatPage> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(height: 30),
-                                // Spacer(flex: 2),
-
                                 DottedLine(
                                   lineThickness: 1.0,
                                   dashLength: 4.0,
                                   dashColor: Colors.grey,
                                 ),
-
                                 Text(
                                   data,
                                   style: TextStyle(color: Colors.white),
@@ -114,7 +117,9 @@ class _ChatPageState extends State<ChatPage> {
                       ),
 
                       // Add more fields from the document as needed
-                      onTap: () {},
+                      onTap: () {
+                        _showProjectDetailsDialog(context, project);
+                      },
                     ),
                   ),
                 );
@@ -173,6 +178,70 @@ class _ChatPageState extends State<ChatPage> {
 
     String name = userSnapshot['name'];
     return name;
+  }
+
+  void _showProjectDetailsDialog(
+      BuildContext context, DocumentSnapshot project) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 350,
+          child: AlertDialog(
+            backgroundColor: Color.fromARGB(255, 218, 232, 238),
+            title: Text(project['title']),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Description:${project['description']} ',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Text('Skills: ${project['skills']}',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Text('Domain: ${project['domain']}',
+                    style: TextStyle(fontSize: 16)),
+                SizedBox(height: 15),
+                Container(
+                  height: 150,
+                  width: 300,
+                  color: Colors.amber,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text("student1", style: TextStyle(fontSize: 18)),
+                        Text("student2", style: TextStyle(fontSize: 18)),
+                        Text("student3", style: TextStyle(fontSize: 18)),
+                        Text("student4", style: TextStyle(fontSize: 18)),
+                        Text("student5", style: TextStyle(fontSize: 18)),
+                        Text("student1", style: TextStyle(fontSize: 18)),
+                        Text("student2", style: TextStyle(fontSize: 18)),
+                        Text("student3", style: TextStyle(fontSize: 18)),
+                        Text("student4", style: TextStyle(fontSize: 18)),
+                        Text("student5", style: TextStyle(fontSize: 18)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Close'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

@@ -236,12 +236,6 @@ class _TeacherState extends State<Teacher> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Apply'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
                     child: Text('Close'),
                   ),
                 ],

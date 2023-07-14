@@ -119,8 +119,7 @@ class _StudentState extends State<Student> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                _truncateSubtitle(project['description'],
-                                    10), // Set the desired word limit
+                                _truncateSubtitle(project['description'], 10),
                                 style: TextStyle(color: Colors.white),
                               ),
                               SizedBox(height: 30),
