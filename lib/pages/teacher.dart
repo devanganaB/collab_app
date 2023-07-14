@@ -84,7 +84,7 @@ class _TeacherState extends State<Teacher> {
 
               return Container(
                 height: 200,
-                padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                 child: Card(
                   semanticContainer: true,
                   color: Colors.blue, // Set the desired color for the card
