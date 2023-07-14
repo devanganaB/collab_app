@@ -13,6 +13,22 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
+Future<List<String>> fetchStudentNames(List<dynamic> userIds) async {
+  List<String> studentNames = [];
+
+  for (String userId in userIds) {
+    DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    if (userSnapshot.exists) {
+      String name = userSnapshot.get('name') as String;
+      studentNames.add(name);
+    }
+  }
+
+  return studentNames;
+}
+
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
   final _auth = FirebaseAuth.instance;
@@ -21,13 +37,20 @@ class _ChatPageState extends State<ChatPage> {
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  final List<String> students = [
-    'Student 1',
-    'Student 2',
-    'Student 3',
-    'Student 4',
-    'Student 5',
-  ];
+  List<String> studentNames = [];
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchStudentNames().then((names) {
+  //     setState(() {
+  //       studentNames = names;
+  //     });
+  //   }).catchError((error) {
+  //     // Handle any potential errors during data retrieval
+  //     print('Error fetching student names: $error');
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -181,14 +204,16 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _showProjectDetailsDialog(
-      BuildContext context, DocumentSnapshot project) {
+      BuildContext context, DocumentSnapshot project) async {
+    List<dynamic> appliedUserIds = project.get('applied') as List<dynamic>;
+    List<String> studentNames = await fetchStudentNames(appliedUserIds);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Container(
           height: 350,
           child: AlertDialog(
-            backgroundColor: Color.fromARGB(255, 218, 232, 238),
+            backgroundColor: Color.fromARGB(255, 210, 232, 242),
             title: Text(project['title']),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,23 +229,20 @@ class _ChatPageState extends State<ChatPage> {
                     style: TextStyle(fontSize: 16)),
                 SizedBox(height: 15),
                 Container(
-                  height: 150,
+                  constraints: BoxConstraints(maxHeight: 200),
                   width: 300,
-                  color: Colors.amber,
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 219, 229, 234),
+                      borderRadius: BorderRadius.circular(8)),
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Text("student1", style: TextStyle(fontSize: 18)),
-                        Text("student2", style: TextStyle(fontSize: 18)),
-                        Text("student3", style: TextStyle(fontSize: 18)),
-                        Text("student4", style: TextStyle(fontSize: 18)),
-                        Text("student5", style: TextStyle(fontSize: 18)),
-                        Text("student1", style: TextStyle(fontSize: 18)),
-                        Text("student2", style: TextStyle(fontSize: 18)),
-                        Text("student3", style: TextStyle(fontSize: 18)),
-                        Text("student4", style: TextStyle(fontSize: 18)),
-                        Text("student5", style: TextStyle(fontSize: 18)),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: studentNames.map((name) {
+                          return Text(name, style: TextStyle(fontSize: 18));
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ),
