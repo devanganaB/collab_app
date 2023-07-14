@@ -228,11 +228,13 @@ class _ChatPageState extends State<ChatPage> {
                 Text('Domain: ${project['domain']}',
                     style: TextStyle(fontSize: 16)),
                 SizedBox(height: 15),
+                Text("Applied students",
+                    style: TextStyle(fontWeight: FontWeight.w600)),
                 Container(
-                  constraints: BoxConstraints(maxHeight: 200),
+                  constraints: BoxConstraints(maxHeight: 120),
                   width: 300,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 219, 229, 234),
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(8)),
                   child: SingleChildScrollView(
                     child: Padding(
@@ -240,7 +242,17 @@ class _ChatPageState extends State<ChatPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: studentNames.map((name) {
-                          return Text(name, style: TextStyle(fontSize: 18));
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Container(
+                                width: 300,
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 218, 231, 238),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child:
+                                    Text(name, style: TextStyle(fontSize: 18))),
+                          );
                         }).toList(),
                       ),
                     ),
