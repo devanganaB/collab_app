@@ -58,7 +58,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[300],
-        title: Text("Projects"),
+        title: Text("Project Requests"),
         actions: [
           IconButton(
             icon: Icon(Icons.logout), //LOGOUT

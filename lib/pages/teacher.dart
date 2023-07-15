@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:softhack/pages/SideMenu.dart';
+import 'package:softhack/pages/ViewProfile.dart';
 import 'ChatPage.dart';
 import 'CreatePostPage.dart';
 import 'LoginPage.dart';
@@ -146,7 +147,10 @@ class _TeacherState extends State<Teacher> {
             IconButton(
               icon: Icon(Icons.account_circle, size: 30),
               onPressed: () {
-                // Action for account
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ViewProfile()),
+                );
               },
             ),
           ],
