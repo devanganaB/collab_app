@@ -74,7 +74,7 @@ class _ChatPageStudentState extends State<ChatPageStudent> {
                           child: ListTile(
                             title: Text(
                               project['title'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -96,8 +96,7 @@ class _ChatPageStudentState extends State<ChatPageStudent> {
                                     children: [
                                       Text(
                                         _truncateSubtitle(
-                                            project['description'],
-                                            10), // Set the desired word limit
+                                            project['description'], 10),
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       Expanded(
