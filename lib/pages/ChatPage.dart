@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'Chat_Page.dart';
 import 'teacher.dart';
 import 'LoginPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -207,10 +208,14 @@ class _ChatPageState extends State<ChatPage> {
       BuildContext context, DocumentSnapshot project, String studentId) async {
     String projectId = project.id;
     DocumentSnapshot userSnapshot = await _userCollection.doc(studentId).get();
+    DocumentSnapshot projectSnapshot =
+        await _projectsCollection.doc(projectId).get();
     List<dynamic> array = userSnapshot['acceptedProjects'];
-
+    List<dynamic> members = projectSnapshot['members'];
+    members.add(studentId);
     array.add(projectId);
     userSnapshot.reference.update({'acceptedProjects': array});
+    projectSnapshot.reference.update({'members': members});
   }
 
   void _showProjectDetailsDialog(
@@ -295,11 +300,17 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   SizedBox(width: 10),
                   ElevatedButton(
-                    onPressed: () {},
-                    // onPressed: isAccepting
-                    //     ? null
-                    //     : () => acceptStudents(selectedStudents),
-                    child: Text('Accept'),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => chatpage(
+                            projectid: project.id,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Chat'),
                   ),
                 ],
               ),

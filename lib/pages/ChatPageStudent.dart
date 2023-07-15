@@ -2,6 +2,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'Chat_Page.dart';
 import 'student.dart';
 import 'LoginPage.dart';
 
@@ -114,7 +115,16 @@ class _ChatPageStudentState extends State<ChatPageStudent> {
                                 }
                               },
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => chatpage(
+                                    projectid: project.id,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       );
