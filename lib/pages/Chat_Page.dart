@@ -54,7 +54,7 @@ class _chatpageState extends State<chatpage> {
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.79,
-              child: messages(
+              child: Messages(
                 projectid: projectid,
               ),
             ),

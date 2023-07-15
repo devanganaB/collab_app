@@ -2,48 +2,49 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class messages extends StatefulWidget {
-  String projectid;
-  messages({required this.projectid});
+class Messages extends StatefulWidget {
+  final String projectid;
+
+  Messages({required this.projectid});
+
   @override
-  _messagesState createState() => _messagesState(projectid: projectid);
+  _MessagesState createState() => _MessagesState(projectid: projectid);
 }
 
-class _messagesState extends State<messages> {
-  String projectid;
-  _messagesState({required this.projectid});
-  Stream<QuerySnapshot>? _messageStream;
+class _MessagesState extends State<Messages> {
+  final String projectid;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? _messageStream;
 
   CollectionReference _projectsCollection =
       FirebaseFirestore.instance.collection('projects');
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  // void initState() {
-  //   getChatandAdmin();
-  //   super.initState();
-  // }
+  _MessagesState({required this.projectid});
 
-  // getChatandAdmin() {
-  //   getChats(projectid).then((val) {
-  //     setState(() {
-  //       _messageStream = val;
-  //       print(_messageStream);
-  //     });
-  //   });
-  // }
-
-  final _auth = FirebaseAuth.instance;
+  @override
+  void initState() {
+    super.initState();
+    getChats(projectid).then((stream) {
+      setState(() {
+        _messageStream = stream;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: getChats(projectid),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    print("hello builder");
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: _messageStream,
+      builder: (BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.hasError) {
-          return Text("something is wrong");
+          print("hello hasError");
+          return Text("Something went wrong");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
+          print("hello");
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -51,19 +52,20 @@ class _messagesState extends State<messages> {
 
         return ListView.builder(
           itemCount: snapshot.data!.docs.length,
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
-          primary: true,
           itemBuilder: (_, index) {
-            QueryDocumentSnapshot qs = snapshot.data!.docs[index];
-            var user = _auth.currentUser;
-            Timestamp t = qs['time'];
+            print("hello itemBuilder");
+            Map<String, dynamic> documentData =
+                snapshot.data!.docs[index].data();
+
+            var user = FirebaseAuth.instance.currentUser;
+            print(user!.uid);
+            Timestamp t = documentData['time'];
             DateTime d = t.toDate();
-            print(d.toString());
+
             return Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: Column(
-                crossAxisAlignment: user!.uid == qs['uid']
+                crossAxisAlignment: user.uid == documentData['uid']
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
@@ -76,24 +78,32 @@ class _messagesState extends State<messages> {
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      title: StreamBuilder<dynamic>(
-                          stream: getName(qs['uid']),
-                          builder: (context, snapshot) {
-                            String data = snapshot.data.toString();
-                            return Text(
-                              data,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            );
-                          }),
+                      title: FutureBuilder<dynamic>(
+                        future: getName(documentData['uid']),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
+                          String data = snapshot.data.toString();
+                          return Text(
+                            data,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          );
+                        },
+                      ),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             width: 200,
                             child: Text(
-                              qs['message'],
+                              documentData['message'],
                               softWrap: true,
                               style: TextStyle(
                                 fontSize: 15,
@@ -101,8 +111,8 @@ class _messagesState extends State<messages> {
                             ),
                           ),
                           Text(
-                            d.hour.toString() + ":" + d.minute.toString(),
-                          )
+                            '${d.hour}:${d.minute}',
+                          ),
                         ],
                       ),
                     ),
@@ -116,15 +126,17 @@ class _messagesState extends State<messages> {
     );
   }
 
-  getChats(String projectid) async {
-    return _projectsCollection
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getChats(
+      String projectid) async {
+    Stream<QuerySnapshot<Map<String, dynamic>>> stream = _projectsCollection
         .doc(projectid)
-        .collection("messages")
-        .orderBy("time")
+        .collection('Messages')
+        .orderBy('time')
         .snapshots();
+    return stream;
   }
 
-  getName(String uid) async {
+  Future<dynamic> getName(String uid) async {
     DocumentSnapshot userSnapshot = await _userCollection.doc(uid).get();
     return userSnapshot['name'];
   }
