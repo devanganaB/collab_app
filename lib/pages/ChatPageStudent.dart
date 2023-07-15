@@ -100,15 +100,15 @@ class _ChatPageStudentState extends State<ChatPageStudent> {
                                             10), // Set the desired word limit
                                         style: TextStyle(color: Colors.white),
                                       ),
-                                      SizedBox(height: 30),
-                                      DottedLine(
-                                        lineThickness: 1.0,
-                                        dashLength: 4.0,
-                                        dashColor: Colors.grey,
-                                      ),
-                                      Text(
-                                        data,
-                                        style: TextStyle(color: Colors.white),
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Mentor: " + data,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   );

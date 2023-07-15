@@ -96,18 +96,14 @@ class _StudentState extends State<Student> {
                                 _truncateSubtitle(project['description'], 10),
                                 style: TextStyle(color: Colors.white),
                               ),
-                              SizedBox(height: 30),
-                              // Spacer(flex: 2),
-
-                              DottedLine(
-                                lineThickness: 1.0,
-                                dashLength: 4.0,
-                                dashColor: Colors.grey,
-                              ),
-
-                              Text(
-                                data,
-                                style: TextStyle(color: Colors.white),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Mentor: " + data,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ],
                           );
