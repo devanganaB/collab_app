@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:softhack/widgets/mentorname.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'SideMenu.dart';
 
 class Teacher extends StatefulWidget {
   @override
@@ -26,101 +27,144 @@ class _TeacherState extends State<Teacher> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey[300],
-        title: Text('Home'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout), //LOGOUT
-            onPressed: () {
-              logout(context);
-            },
+      backgroundColor: Colors.transparent,
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.logout), //LOGOUT
+      //     onPressed: () {
+      //       logout(context);
+      //     },
+      //   ),
+      // ],
+
+      // drawer: SideMenu(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              Colors.lightBlueAccent,
+              Colors.deepPurple,
+              Colors.purple,
+              Colors.redAccent
+            ],
           ),
-        ],
-      ),
-      drawer: SideMenu(),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _projectsCollection.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var project = snapshot.data!.docs[index];
-
-              return Container(
-                height: 200,
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: Card(
-                  semanticContainer: true,
-                  color: Colors.blue, // Set the desired color for the card
-                  elevation: 4, // Set the desired elevation for the card
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        10), // Set the desired border radius for the card
-                  ),
-                  // Set the desired padding for the card content
-
-                  child: ListTile(
-                    title: Text(
-                      project['title'],
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-
-                    subtitle: FutureBuilder<dynamic>(
-                      future: getData(context, project),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          String data = snapshot.data.toString();
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _truncateSubtitle(project['description'], 10),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              // SizedBox(height: 45),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Mentor: " + data,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 60,
+              padding: EdgeInsets.fromLTRB(16, 24, 16, 0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Builder(builder: (context) {
+                      return IconButton(
+                        icon: Icon(Icons.menu), // Hamburger icon for side menu
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                      );
+                    }),
+                    IconButton(
+                      icon: Icon(Icons.logout), // Logout icon
+                      onPressed: () {
+                        logout(context);
                       },
                     ),
+                  ]),
+            ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _projectsCollection.snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
 
-                    // Add more fields from the document as needed
-                    onTap: () {
-                      _showProjectDetailsDialog(context, project);
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var project = snapshot.data!.docs[index];
+
+                      return Container(
+                        height: 200,
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Container(
+                          child: Card(
+                            semanticContainer: true,
+                            color: Color.fromARGB(255, 255, 251, 251),
+                            elevation: 15,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: ListTile(
+                              title: Text(
+                                project['title'],
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  // color: Colors.white
+                                ),
+                              ),
+                              subtitle: FutureBuilder<dynamic>(
+                                future: getData(context, project),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    String data = snapshot.data.toString();
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _truncateSubtitle(
+                                              project['description'], 10),
+                                          style: TextStyle(
+                                              // color: Colors.white,
+                                              fontSize: 16),
+                                        ),
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Mentor: " + data,
+                                              style: TextStyle(
+                                                  // color: Colors.white,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                },
+                              ),
+                              onTap: () {
+                                _showProjectDetailsDialog(context, project);
+                              },
+                            ),
+                          ),
+                        ),
+                      );
                     },
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
+      drawer: SideMenu(),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,19 +229,46 @@ class _TeacherState extends State<Teacher> {
           height: 150,
           child: AlertDialog(
             backgroundColor: Color.fromARGB(255, 218, 232, 238),
-            title: Text(project['title']),
+            title: Center(
+              child: Text(
+                project['title'],
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+              ),
+            ),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Description:${project['description']} ',
-                    style: TextStyle(fontSize: 16)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Description: ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text('${project['description']} ',
+                        style: TextStyle(fontSize: 16)),
+                  ],
+                ),
                 SizedBox(height: 15),
-                Text('Skills: ${project['skills']}',
-                    style: TextStyle(fontSize: 16)),
+                Row(
+                  children: [
+                    Text('Skills: ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text('${project['skills']}',
+                        style: TextStyle(fontSize: 16)),
+                  ],
+                ),
                 SizedBox(height: 15),
-                Text('Domain: ${project['domain']}',
-                    style: TextStyle(fontSize: 16)),
+                Row(
+                  children: [
+                    Text('Domain: ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text('${project['domain']}',
+                        style: TextStyle(fontSize: 16)),
+                  ],
+                ),
                 SizedBox(height: 15),
               ],
             ),

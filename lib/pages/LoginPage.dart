@@ -53,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 15),
 
                 //EMAIL
-
                 TextField(
                   controller: emailController,
                   onChanged: (value) {

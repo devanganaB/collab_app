@@ -93,16 +93,16 @@ class _ChatPageState extends State<ChatPage> {
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: Card(
                     semanticContainer: true,
-                    color: Colors.blue,
-                    elevation: 4,
+                    color: Colors.indigoAccent,
+                    elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
                       title: Text(
                         project['title'],
-                        style: TextStyle(
-                            fontSize: 20,
+                        style: const TextStyle(
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),
@@ -121,16 +121,17 @@ class _ChatPageState extends State<ChatPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _truncateSubtitle(project['description'],
-                                      10), // Set the desired word limit
-                                  style: TextStyle(color: Colors.white),
+                                  _truncateSubtitle(project['description'], 10),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
                                 ),
                                 Expanded(
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
                                       "Mentor: " + data,
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
                                     ),
                                   ),
                                 ),
@@ -231,43 +232,68 @@ class _ChatPageState extends State<ChatPage> {
           height: 350,
           child: AlertDialog(
             backgroundColor: Color.fromARGB(255, 210, 232, 242),
-            title: Text(project['title']),
+            title: Center(
+              child: Text(project['title'],
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+            ),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Description:${project['description']} ',
-                    style: TextStyle(fontSize: 16)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Description: ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text('${project['description']} ',
+                        style: TextStyle(fontSize: 16)),
+                  ],
+                ),
                 SizedBox(height: 15),
-                Text('Skills: ${project['skills']}',
-                    style: TextStyle(fontSize: 16)),
+                Row(
+                  children: [
+                    Text('Skills: ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text('${project['skills']}',
+                        style: TextStyle(fontSize: 16)),
+                  ],
+                ),
                 SizedBox(height: 15),
-                Text('Domain: ${project['domain']}',
-                    style: TextStyle(fontSize: 16)),
+                Row(
+                  children: [
+                    Text('Domain: ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text('${project['domain']}',
+                        style: TextStyle(fontSize: 16)),
+                  ],
+                ),
                 SizedBox(height: 15),
                 Text("Applied students",
-                    style: TextStyle(fontWeight: FontWeight.w600)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                 Container(
                   constraints: BoxConstraints(maxHeight: 120),
-                  width: 300,
                   decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(8)),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: studentNames.map((name) {
                           int ind = studentNames.indexOf(name);
-                          return Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                width: 300,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 218, 231, 238),
-                                    borderRadius: BorderRadius.circular(8)),
+                          return Container(
+                              width: 300,
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 218, 231, 238),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -280,8 +306,8 @@ class _ChatPageState extends State<ChatPage> {
                                         },
                                         child: Text("accept"))
                                   ],
-                                )),
-                          );
+                                ),
+                              ));
                         }).toList(),
                       ),
                     ),
