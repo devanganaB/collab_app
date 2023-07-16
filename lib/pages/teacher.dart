@@ -28,18 +28,8 @@ class _TeacherState extends State<Teacher> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      // actions: [
-      //   IconButton(
-      //     icon: Icon(Icons.logout), //LOGOUT
-      //     onPressed: () {
-      //       logout(context);
-      //     },
-      //   ),
-      // ],
-
-      // drawer: SideMenu(),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -54,6 +44,7 @@ class _TeacherState extends State<Teacher> {
         ),
         child: Column(
           children: [
+            //TOP
             Container(
               height: 60,
               padding: EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -76,6 +67,8 @@ class _TeacherState extends State<Teacher> {
                     ),
                   ]),
             ),
+
+            //CARDS
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: _projectsCollection.snapshots(),

@@ -60,7 +60,7 @@ class _MessageTileState extends State<MessageTile> {
             //       letterSpacing: -0.5),
             // ),
             const SizedBox(
-              height: 8,
+              height: 5,
             ),
             Text(widget.message,
                 textAlign: TextAlign.start,
