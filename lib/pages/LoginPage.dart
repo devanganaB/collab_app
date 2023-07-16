@@ -18,14 +18,19 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
 
+  bool isTextFieldEmpty = true;
+
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 238, 238, 238),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: Colors.grey[350],
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.indigo[600],
       ),
       body: Padding(
         padding: const EdgeInsets.all(45.0),
@@ -39,25 +44,41 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 32),
 
                 //LOGO
-                const FlutterLogo(
-                  size: 120,
+                Container(
+                  width: 300,
+                  height: 300,
+                  child: Image.asset('assets/images/logo.jpg'),
                 ),
-                const SizedBox(height: 32),
+
+                const SizedBox(height: 15),
 
                 //EMAIL
                 TextField(
                   controller: emailController,
+                  onChanged: (value) {
+                    setState(() {
+                      isTextFieldEmpty = value.isEmpty;
+                    });
+                  },
                   decoration: const InputDecoration(
                     labelText: 'Email',
+                    hintText: 'Enter Email',
                   ),
                 ),
+
                 const SizedBox(height: 16),
 
                 //PASSWRD
                 TextField(
                   controller: passwordController,
+                  onChanged: (value) {
+                    setState(() {
+                      isTextFieldEmpty = value.isEmpty;
+                    });
+                  },
                   decoration: const InputDecoration(
                     labelText: 'Password',
+                    hintText: 'Enter Password',
                   ),
                   obscureText: true,
                 ),

@@ -14,6 +14,8 @@ class _AddProjectPageState extends State<AddProjectPage> {
   final _descriptionController = TextEditingController();
   final _domainController = TextEditingController();
   final _skillsController = TextEditingController();
+  List<String> applied = [];
+  List<String> members = [];
 
   CollectionReference _projectsCollection =
       FirebaseFirestore.instance.collection('projects');
@@ -37,6 +39,8 @@ class _AddProjectPageState extends State<AddProjectPage> {
         'domain': _domainController.text,
         'skills': _skillsController.text,
         'userDocId': user!.uid,
+        'applied': applied,
+        'members': members
       });
 
       // Clear the form

@@ -21,6 +21,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController passwordController = new TextEditingController();
   final TextEditingController githubProfileController =
       new TextEditingController();
+  List<String> acceptedProjects = [];
 
   String _name = '';
   String _contactNumber = '';
@@ -35,10 +36,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 238, 238, 238),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Registration'),
-        backgroundColor: Colors.grey[350],
+        title: const Text(
+          'Registration',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.indigo[600],
       ),
       body: Padding(
         padding: const EdgeInsets.all(45.0),
@@ -78,7 +82,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       _name = value;
                     });
                   },
-                  decoration: InputDecoration(labelText: 'Name'),
+                  decoration: InputDecoration(
+                      labelText: 'Name', hintText: 'Enter your name'),
                 ),
 
                 SizedBox(height: 25),
@@ -91,7 +96,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       _email = value;
                     });
                   },
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: InputDecoration(
+                      labelText: 'Email', hintText: 'Enter your email'),
                   keyboardType: TextInputType.emailAddress,
                 ),
 
@@ -105,7 +111,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       _contactNumber = value;
                     });
                   },
-                  decoration: InputDecoration(labelText: 'Contact Number'),
+                  decoration: InputDecoration(
+                      labelText: 'Contact', hintText: 'Enter Contact number'),
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // Only allow digits
@@ -129,7 +136,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       _githubProfile = value;
                     });
                   },
-                  decoration: InputDecoration(labelText: 'GitHub Profile'),
+                  decoration: InputDecoration(
+                      labelText: 'GitHub Profile', hintText: 'Profile Link'),
                 ),
 
                 SizedBox(height: 25),
@@ -144,7 +152,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   },
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    hintText: 'Enter password',
                     suffixIcon: IconButton(
+                      color: const Color.fromARGB(255, 14, 28, 107),
                       icon: Icon(_showPassword
                           ? Icons.visibility
                           : Icons.visibility_off),
@@ -203,6 +213,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'role': role,
         'contactNumber': _contactNumber,
         'githubProfile': _githubProfile,
+        'acceptedProjects': acceptedProjects
       });
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
