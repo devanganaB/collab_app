@@ -1,4 +1,4 @@
-# softhack
+# collab_app
 
 A new Flutter project.
 
