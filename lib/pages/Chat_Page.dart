@@ -25,6 +25,7 @@ class _chatpageState extends State<chatpage> {
   final fs = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final TextEditingController message = new TextEditingController();
+  final TextEditingController githubLink = new TextEditingController();
   CollectionReference _projectsCollection =
       FirebaseFirestore.instance.collection('projects');
   CollectionReference _userCollection =
@@ -151,6 +152,68 @@ class _chatpageState extends State<chatpage> {
             );
           }
         }
+      },
+    );
+  }
+
+  void _showProjectDetailsDialog(
+      BuildContext context, DocumentSnapshot project) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 350,
+          child: AlertDialog(
+            backgroundColor: Color.fromARGB(255, 210, 232, 242),
+            title: Center(
+              child: Text(project['title'],
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+            ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: githubLink,
+                      onChanged: (value) {
+                        githubLink.text = value;
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'Github  ',
+                          hintText: 'Enter Github repository link'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Close'),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (githubLink.text.isNotEmpty) {
+                        _projectsCollection
+                            .doc(projectid)
+                            .update({'githubLink': githubLink.text});
+                      }
+                    },
+                    child: Text('Github'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       },
     );
   }

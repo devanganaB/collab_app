@@ -40,7 +40,8 @@ class _AddProjectPageState extends State<AddProjectPage> {
         'skills': _skillsController.text,
         'userDocId': user!.uid,
         'applied': applied,
-        'members': members
+        'members': members,
+        'githubLink': ""
       });
 
       // Clear the form
