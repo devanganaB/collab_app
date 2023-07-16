@@ -34,22 +34,18 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    print("hello builder");
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: _messageStream,
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.hasError) {
-          print("hello hasError");
           return Text("Something went wrong");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print("hello");
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-
         return ListView.builder(
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (_, index) {
@@ -62,62 +58,70 @@ class _MessagesState extends State<Messages> {
             Timestamp t = documentData['time'];
             DateTime d = t.toDate();
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Column(
-                crossAxisAlignment: user.uid == documentData['uid']
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 300,
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.purple,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      title: FutureBuilder<dynamic>(
-                        future: getName(documentData['uid']),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          }
-                          if (snapshot.hasError) {
-                            return Text("Something went wrong");
-                          }
-                          String data = snapshot.data.toString();
-                          return Text(
-                            data,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          );
-                        },
-                      ),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 200,
-                            child: Text(
-                              documentData['message'],
-                              softWrap: true,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
+            return Container(
+              padding: EdgeInsets.only(
+                  top: 4,
+                  bottom: 4,
+                  left: documentData['uid'] == user.uid ? 0 : 24,
+                  right: documentData['uid'] == user.uid ? 24 : 0),
+              alignment: documentData['uid'] == user.uid
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
+              child: Container(
+                margin: documentData['uid'] == user.uid
+                    ? const EdgeInsets.only(left: 30)
+                    : const EdgeInsets.only(right: 30),
+                padding: const EdgeInsets.only(
+                    top: 17, bottom: 17, left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: documentData['uid'] == user.uid
+                        ? const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                          )
+                        : const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
                           ),
-                          Text(
-                            '${d.hour}:${d.minute}',
-                          ),
-                        ],
-                      ),
+                    color: documentData['uid'] == user.uid
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[700]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FutureBuilder<dynamic>(
+                      future: getName(documentData['uid']),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Text("Something went wrong");
+                        }
+                        String data = snapshot.data.toString();
+                        return Text(
+                          data,
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: -0.5),
+                        );
+                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(documentData['message'],
+                        textAlign: TextAlign.start,
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.white))
+                  ],
+                ),
               ),
             );
           },

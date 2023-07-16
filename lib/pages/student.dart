@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:softhack/pages/SideMenu.dart';
 import 'package:softhack/pages/teacher.dart';
 import 'ChatPage.dart';
+import 'ChatPageStudent.dart';
 import 'CreatePostPage.dart';
 import 'LoginPage.dart';
 import 'package:softhack/widgets/cards.dart';
@@ -11,7 +12,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'ViewProfile.dart';
 import 'package:softhack/widgets/mentorname.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'ChatPageStudent.dart';
+
+import 'package:google_fonts/google_fonts.dart';
 
 class Student extends StatefulWidget {
   @override
@@ -50,109 +52,137 @@ class _StudentState extends State<Student> {
               height: 60,
               padding: EdgeInsets.fromLTRB(16, 24, 16, 0),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Builder(builder: (context) {
-                      return IconButton(
-                        icon: Icon(Icons.menu), // Hamburger icon for side menu
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      );
-                    }),
-                    IconButton(
-                      icon: Icon(Icons.logout), // Logout icon
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Builder(builder: (context) {
+                    return IconButton(
+                      icon: Icon(Icons.menu), // Hamburger icon for side menu
                       onPressed: () {
-                        logout(context);
+                        Scaffold.of(context).openDrawer();
                       },
-                    ),
-                  ]),
+                    );
+                  }),
+                  IconButton(
+                    icon: Icon(Icons.logout), // Logout icon
+                    onPressed: () {
+                      logout(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+                height: 40,
+                child: Text("Collaborate & learn",
+                    style: GoogleFonts.sacramento(
+                        textStyle:
+                            TextStyle(fontSize: 40, color: Colors.white)))),
+            SizedBox(
+              height: 20,
             ),
 
             //CARDS
             Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _projectsCollection.snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 243, 240, 240),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: _projectsCollection.snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
 
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
 
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var project = snapshot.data!.docs[index];
+                      return Padding(
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var project = snapshot.data!.docs[index];
 
-                      return Container(
-                        height: 200,
-                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                        child: Container(
-                          child: Card(
-                            semanticContainer: true,
-                            color: Color.fromARGB(255, 255, 251, 251),
-                            elevation: 15,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: ListTile(
-                              title: Text(
-                                project['title'],
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  // color: Colors.white
+                            return Container(
+                              height: 200,
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                              child: Container(
+                                child: Card(
+                                  semanticContainer: true,
+                                  color: Colors.indigoAccent,
+                                  elevation: 15,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      project['title'],
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    subtitle: FutureBuilder<dynamic>(
+                                      future: getData(context, project),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return CircularProgressIndicator();
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                              'Error: ${snapshot.error}');
+                                        } else {
+                                          String data =
+                                              snapshot.data.toString();
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                _truncateSubtitle(
+                                                    project['description'], 10),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                              Expanded(
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    "Mentor: " + data,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    onTap: () {
+                                      _showProjectDetailsDialog(
+                                          context, project);
+                                    },
+                                  ),
                                 ),
                               ),
-                              subtitle: FutureBuilder<dynamic>(
-                                future: getData(context, project),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    String data = snapshot.data.toString();
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _truncateSubtitle(
-                                              project['description'], 10),
-                                          style: TextStyle(
-                                              // color: Colors.white,
-                                              fontSize: 16),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Mentor: " + data,
-                                              style: TextStyle(
-                                                  // color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                              onTap: () {
-                                _showProjectDetailsDialog(context, project);
-                              },
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       );
                     },
-                  );
-                },
+                  ),
+                ),
               ),
             ),
           ],

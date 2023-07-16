@@ -67,6 +67,20 @@ class _chatpageState extends State<chatpage> {
               appBar: AppBar(
                 backgroundColor: Colors.grey[300],
                 title: Text(projectTitle),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        var user = _auth.currentUser;
+                        DocumentSnapshot userSnapshot =
+                            await _userCollection.doc(user!.uid).get();
+                        if (userSnapshot['role'] == 'Student') {
+                          DocumentSnapshot project =
+                              await _projectsCollection.doc(projectid).get();
+                          _showProjectDetailsDialog(context, project);
+                        } else {}
+                      },
+                      child: Text("GitHub"))
+                ],
               ),
 
               //BODY
@@ -217,4 +231,10 @@ class _chatpageState extends State<chatpage> {
       },
     );
   }
+//   _launchURL() async {
+//    final Uri url = Uri.parse('https://flutter.dev');
+//    if (!await launchUrl(url)) {
+//         throw Exception('Could not launch $_url');
+//     }
+// }
 }

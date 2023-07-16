@@ -67,7 +67,7 @@ class _ChatPageStudentState extends State<ChatPageStudent> {
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: Card(
                           semanticContainer: true,
-                          color: Colors.blue,
+                          color: Colors.indigoAccent,
                           elevation: 4,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
