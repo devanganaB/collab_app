@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'message.dart';
 
 class chatpage extends StatefulWidget {
   String projectid;
   chatpage({required this.projectid});
+
   @override
   _chatpageState createState() => _chatpageState(projectid: projectid);
 }
@@ -26,6 +29,14 @@ class _chatpageState extends State<chatpage> {
   final _auth = FirebaseAuth.instance;
   final TextEditingController message = new TextEditingController();
   final TextEditingController githubLink = new TextEditingController();
+
+  _launchURL(String link) async {
+    final Uri url = Uri.parse(link);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   CollectionReference _projectsCollection =
       FirebaseFirestore.instance.collection('projects');
   CollectionReference _userCollection =
@@ -62,11 +73,86 @@ class _chatpageState extends State<chatpage> {
           } else {
             var projectData = snapshot.data!;
             String projectTitle = projectData['title'];
+            String githubLinkValue = projectData['githubLink'] ?? '';
+
             return Scaffold(
               //APPBAR
               appBar: AppBar(
                 backgroundColor: Colors.grey[300],
                 title: Text(projectTitle),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          githubLink.text =
+                              githubLinkValue; // Set the initial value from Firestore
+                          return AlertDialog(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 40, horizontal: 20),
+                            content: Container(
+                              height: 140,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //github link
+                                  TextField(
+                                    controller: githubLink,
+                                    onChanged: (value) {
+                                      githubLink.text = value;
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: 'GitHub Repository',
+                                      hintText: 'Enter Repository link',
+                                    ),
+                                  ),
+                                  SizedBox(height: 25),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      if (githubLink.text.isNotEmpty) {
+                                        _launchURL(githubLink.text);
+                                      }
+                                    },
+                                    child: Text(
+                                      'Go to the Project Repository',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () async {
+                                  String newGithubLink = githubLink.text;
+                                  // Save the GitHub link to Firestore
+                                  await _projectsCollection
+                                      .doc(projectid)
+                                      .update({'githubLink': newGithubLink});
+                                },
+                                child: Text('Save'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Close'),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Image.asset('assets/images/github.png'),
+                    ),
+                  ),
+                ],
               ),
 
               //BODY
@@ -152,68 +238,6 @@ class _chatpageState extends State<chatpage> {
             );
           }
         }
-      },
-    );
-  }
-
-  void _showProjectDetailsDialog(
-      BuildContext context, DocumentSnapshot project) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 350,
-          child: AlertDialog(
-            backgroundColor: Color.fromARGB(255, 210, 232, 242),
-            title: Center(
-              child: Text(project['title'],
-                  style: TextStyle(fontWeight: FontWeight.w500)),
-            ),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: githubLink,
-                      onChanged: (value) {
-                        githubLink.text = value;
-                      },
-                      decoration: InputDecoration(
-                          labelText: 'Github  ',
-                          hintText: 'Enter Github repository link'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            actions: [
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Close'),
-                  ),
-                  SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (githubLink.text.isNotEmpty) {
-                        _projectsCollection
-                            .doc(projectid)
-                            .update({'githubLink': githubLink.text});
-                      }
-                    },
-                    child: Text('Github'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
       },
     );
   }

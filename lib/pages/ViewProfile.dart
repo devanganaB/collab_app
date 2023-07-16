@@ -11,7 +11,7 @@ class ViewProfile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
-        backgroundColor: Colors.grey[350],
+        backgroundColor: Colors.grey[300],
       ),
     );
   }

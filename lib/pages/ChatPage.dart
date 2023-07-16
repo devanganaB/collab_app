@@ -240,24 +240,25 @@ class _ChatPageState extends State<ChatPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Description: ',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
-                    Text('${project['description']} ',
-                        style: TextStyle(fontSize: 16)),
-                  ],
-                ),
+                Text('Description: ',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                Text('${project['description']} ',
+                    style: TextStyle(fontSize: 16)),
                 SizedBox(height: 15),
                 Row(
                   children: [
                     Text('Skills: ',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
-                    Text('${project['skills']}',
-                        style: TextStyle(fontSize: 16)),
+                    Flexible(
+                      child: Text(
+                        '${project['skills']}',
+                        style: TextStyle(fontSize: 16),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 15),
