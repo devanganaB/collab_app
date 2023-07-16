@@ -165,7 +165,7 @@ class _chatpageState extends State<chatpage> {
                     children: [
                       //TEXTY
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         height: MediaQuery.of(context).size.height * 0.819,
                         child: Messages(
                           projectid: projectid,
